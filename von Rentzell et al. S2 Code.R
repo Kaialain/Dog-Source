@@ -7,7 +7,7 @@ library(tidyverse)
 library(ResourceSelection)
 
 
-Poll_data_oct_2020_Dogs_only <- read_excel("~/Desktop/Dog Source/Dog source 2/S2 Code.xlsx")
+Poll_data_oct_2020_Dogs_only <- read_excel("~/Desktop/Dog Source/Dog source 2/S2 Dataset.xlsx")
 View(Poll_data_oct_2020_Dogs_only)
 Dogsource2 <- Poll_data_oct_2020_Dogs_only
 view(Dogsource2)
