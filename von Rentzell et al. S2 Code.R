@@ -91,6 +91,54 @@ DogSourceData <- DogSource2.1 %>%
   subset(!purebred == "3")
 
 
+### Creating Dataset used for Hosmer-Lemeshow Goodness of fit test
+DogSourceDataFit <- DogSource2.2 %>%
+  rename(agegroup = X2_baskets) %>%
+  mutate(Positive_training = (6 - Positive_training),
+         Challenging_behavior = (6 - Challenging_behavior),
+         Health_problem = (6 - Health_problem),
+         Close_relationship = (6 - Close_relationship),
+         Burden = (6 - Burden),
+         dogbornCanada = (dogbornCanada - 1),
+         gender = factor(gender, levels = c("1", "2", "3", "4"),
+                         labels = c("Male", "Female", "Non-binary", "Other")),
+         agegroup = factor(agegroup, levels = c("1", "2", "3"),
+                           labels = c("18 ~ 34", "35 ~ 54", "55+")),
+         current_household = factor(current_household, levels = c("1", "2", "3", "4"),
+                                    labels = c("Dog", "Cat", "Both", "No")),
+         past_household = factor(past_household, levels = c("1", "2", "3", "4"),
+                                 labels = c("Dog", "Cat", "Both", "No")),
+         source = factor(source, levels = c("1", "2", "3", "4", "5"),
+                         labels = c("When moving to Canada", "Foreign Breeder", "Foreign rescue", 
+                                    "Flight escorted to Canada", "Other")),
+         purebred = factor(purebred, levels = c("1", "2", "3"),
+                           labels = c("Yes", "Mixed breed", "Don't know")),
+         dog_size = factor(dog_size, levels = c("1", "2", "3"),
+                           labels = c("Small (<10kg)", "Medium (10 ~ 20kg)", "Large (>20kg)")),
+         agewhenacquired = factor(agewhenacquired, levels = c("1", "2", "3", "4", "5", "6"),
+                                  labels = c("Newborn (<8wks)", "Puppy (8wks ~ 5mnth)", 
+                                             "Adolescent (5mnth ~ 1yr)", "Adult (1yr ~ 8yr)", "Senior (8yr+)",
+                                             "Don't know")),
+  )%>%
+  subset(!dogbornCanada == "NA") %>%
+  subset(!dogbornCanada == "2") %>%
+  subset(!gender == "Non-binary") %>%
+  subset(!gender =="Other") %>%
+  subset(!agewhenacquired == "Don't know") %>%
+  subset(!purebred == "Don't know") %>%
+  subset(!Positive_training == "0") %>%
+  subset(!Challenging_behavior == "0") %>%
+  subset(!Health_problem == "0") %>%
+  subset(!Close_relationship == "0") %>%
+  subset(!Burden == "0")
+
+
+# Hosmer-Lemeshow Goodness of fit test
+hoslmtest <- hoslem.test(DogSourceDataFit$dogbornCanada, fitted(CanadianMRALL), g=10)
+hoslmtest
+
+
+
 ### Creating the DogSourcedata for Logistic regression model
 # Dataset titled Dogsourcedataglm2 was used for creation of Odds Ratio plot
 DogSourceDataglm <- DogSource2.1 %>%
